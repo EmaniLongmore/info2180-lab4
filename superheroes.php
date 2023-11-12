@@ -1,5 +1,7 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+
 $superheroes = [
   [
       "id" => 1,
@@ -63,10 +65,30 @@ $superheroes = [
   ], 
 ];
 
-?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+
+$hero = filter_input(INPUT_GET, 'query'); 
+$found = false;
+
+if (empty($hero)):
+    echo "<ul>";
+    foreach ($superheroes as $superhero):
+        echo "<li>{$superhero['alias']}</li>";
+    endforeach;
+    echo "</ul>";
+else:
+    foreach ($superheroes as $superhero):
+        if ($superhero['alias'] == $hero || $superhero['name'] == $hero):
+            $found = true;
+            echo "<h3>{$superhero['alias']}</h3>";
+            echo "<h4> A.K.A {$superhero['name']}</h4>";
+            echo "<p>{$superhero['biography']}</p>";
+        endif;
+    endforeach;
+
+    if (!$found):
+        echo "<p style='color: red'> Superhero not found </p>";
+    endif;
+endif;
+
+
